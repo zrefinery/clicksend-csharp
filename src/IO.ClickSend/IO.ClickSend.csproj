@@ -20,7 +20,7 @@ Contact: support@clicksend.com
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>IO.ClickSend</RootNamespace>
-    <AssemblyName>IO.ClickSend</AssemblyName>
+    <AssemblyName>IO.ClickSend.ZR</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <PackageOutputPath>bin\Package</PackageOutputPath>

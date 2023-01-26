@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ClickSend Library")]
+[assembly: AssemblyTitle("ClickSend Library (ZR Build)")]
 [assembly: AssemblyDescription("A library generated from a ClickSend doc")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ClickSend")]
+[assembly: AssemblyCompany("ClickSend / Zeeland Refinery N.V.")]
 [assembly: AssemblyProduct("ClickSendLibrary")]
-[assembly: AssemblyCopyright("No Copyright")]
+[assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
