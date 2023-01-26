@@ -233,7 +233,7 @@ namespace IO.ClickSend.Client
                 _basePath = value;
                 // pass-through to ApiClient if it's set.
                 if(_apiClient != null) {
-                    _apiClient.RestClient.BaseUrl = new Uri(_basePath);
+                    _apiClient.RestClient.Options.BaseUrl = new Uri(_basePath);
                 }
             }
         }
@@ -249,8 +249,8 @@ namespace IO.ClickSend.Client
         public virtual int Timeout
         {
             
-            get { return ApiClient.RestClient.Timeout; }
-            set { ApiClient.RestClient.Timeout = value; }
+            get { return ApiClient.RestClient.Options.MaxTimeout; }
+            set { ApiClient.RestClient.Options.MaxTimeout = value; }
         }
 
         /// <summary>
