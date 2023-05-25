@@ -14,6 +14,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 
 namespace IO.ClickSend.Client
@@ -222,21 +223,10 @@ namespace IO.ClickSend.Client
                 return _apiClient;
             }
         }
-
-        private String _basePath = null;
         /// <summary>
         /// Gets or sets the base path for API access.
         /// </summary>
-        public virtual string BasePath {
-            get { return _basePath; }
-            set {
-                _basePath = value;
-                // pass-through to ApiClient if it's set.
-                if(_apiClient != null) {
-                    _apiClient.RestClient.Options.BaseUrl = new Uri(_basePath);
-                }
-            }
-        }
+        public virtual string BasePath { get; set; }
 
         /// <summary>
         /// Gets or sets the default header.
@@ -246,12 +236,7 @@ namespace IO.ClickSend.Client
         /// <summary>
         /// Gets or sets the HTTP timeout (milliseconds) of ApiClient. Default to 100000 milliseconds.
         /// </summary>
-        public virtual int Timeout
-        {
-            
-            get { return ApiClient.RestClient.Options.MaxTimeout; }
-            set { ApiClient.RestClient.Options.MaxTimeout = value; }
-        }
+        public virtual int Timeout { get; set; }
 
         /// <summary>
         /// Gets or sets the HTTP user agent.
@@ -270,6 +255,8 @@ namespace IO.ClickSend.Client
         /// </summary>
         /// <value>The password.</value>
         public virtual string Password { get; set; }
+
+        public virtual IWebProxy Proxy { get; set; }
 
         /// <summary>
         /// Gets the API key with prefix.
@@ -416,9 +403,9 @@ namespace IO.ClickSend.Client
         /// <summary>
         /// Returns a string with essential information for debugging.
         /// </summary>
-        public static String ToDebugReport()
+        public static string ToDebugReport()
         {
-            String report = "C# SDK (IO.ClickSend) Debug Report:\n";
+            string report = "C# SDK (IO.ClickSend) Debug Report:\n";
             report += "    OS: " + System.Environment.OSVersion + "\n";
             report += "    .NET Framework Version: " + System.Environment.Version  + "\n";
             report += "    Version of the API: 3.1\n";

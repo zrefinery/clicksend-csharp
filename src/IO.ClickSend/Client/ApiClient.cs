@@ -53,7 +53,13 @@ namespace IO.ClickSend.Client
         public ApiClient()
         {
             Configuration = IO.ClickSend.Client.Configuration.Default;
-            RestClient = new RestClient("https://rest.clicksend.com/v3");
+
+            var options = new RestClientOptions("https://rest.clicksend.com/v3")
+            {
+                MaxTimeout = Configuration.Timeout,
+                Proxy = Configuration.Proxy
+            };
+            RestClient = new RestClient(options);
         }
 
         /// <summary>
@@ -65,7 +71,12 @@ namespace IO.ClickSend.Client
         {
             Configuration = config ?? IO.ClickSend.Client.Configuration.Default;
 
-            RestClient = new RestClient(Configuration.BasePath);
+            var options = new RestClientOptions("https://rest.clicksend.com/v3")
+            {
+                MaxTimeout = Configuration.Timeout,
+                Proxy = Configuration.Proxy
+            };
+            RestClient = new RestClient(options);
         }
 
         /// <summary>
@@ -73,13 +84,18 @@ namespace IO.ClickSend.Client
         /// with default configuration.
         /// </summary>
         /// <param name="basePath">The base path.</param>
-        public ApiClient(String basePath = "https://rest.clicksend.com/v3")
+        public ApiClient(string basePath = "https://rest.clicksend.com/v3")
         {
-           if (String.IsNullOrEmpty(basePath))
+            if (string.IsNullOrEmpty(basePath))
                 throw new ArgumentException("basePath cannot be empty");
 
-            RestClient = new RestClient(basePath);
             Configuration = Client.Configuration.Default;
+            var options = new RestClientOptions("https://rest.clicksend.com/v3")
+            {
+                MaxTimeout = Configuration.Timeout,
+                Proxy = Configuration.Proxy
+            };
+            RestClient = new RestClient(options);
         }
 
         /// <summary>
@@ -108,10 +124,10 @@ namespace IO.ClickSend.Client
 
         // Creates and sets up a RestRequest prior to a call.
         private RestRequest PrepareRequest(
-            String path, RestSharp.Method method, List<KeyValuePair<String, String>> queryParams, Object postBody,
-            Dictionary<String, String> headerParams, Dictionary<String, String> formParams,
-            Dictionary<String, FileParameter> fileParams, Dictionary<String, String> pathParams,
-            String contentType)
+            string path, RestSharp.Method method, List<KeyValuePair<string, string>> queryParams, object postBody,
+            Dictionary<string, string> headerParams, Dictionary<string, string> formParams,
+            Dictionary<string, FileParameter> fileParams, Dictionary<string, string> pathParams,
+            string contentType)
         {
             var request = new RestRequest(path, method);
 
@@ -158,19 +174,16 @@ namespace IO.ClickSend.Client
         /// <param name="pathParams">Path parameters.</param>
         /// <param name="contentType">Content Type of the request</param>
         /// <returns>Object</returns>
-        public Object CallApi(
-            String path, RestSharp.Method method, List<KeyValuePair<String, String>> queryParams, Object postBody,
-            Dictionary<String, String> headerParams, Dictionary<String, String> formParams,
-            Dictionary<String, FileParameter> fileParams, Dictionary<String, String> pathParams,
-            String contentType)
+        public object CallApi(
+            string path, RestSharp.Method method, List<KeyValuePair<string, string>> queryParams, object postBody,
+            Dictionary<string, string> headerParams, Dictionary<string, string> formParams,
+            Dictionary<string, FileParameter> fileParams, Dictionary<string, string> pathParams,
+            string contentType)
         {
             var request = PrepareRequest(
                 path, method, queryParams, postBody, headerParams, formParams, fileParams,
                 pathParams, contentType);
-
-            // set timeout
             
-            RestClient.Options.MaxTimeout = Configuration.Timeout;
             // set user agent
             //RestClient.UserAgent = Configuration.UserAgent;
 
@@ -178,7 +191,7 @@ namespace IO.ClickSend.Client
             var response = RestClient.Execute(request);
             InterceptResponse(request, response);
 
-            return (Object) response;
+            return (object) response;
         }
         /// <summary>
         /// Makes the asynchronous HTTP request.
@@ -193,11 +206,11 @@ namespace IO.ClickSend.Client
         /// <param name="pathParams">Path parameters.</param>
         /// <param name="contentType">Content type.</param>
         /// <returns>The Task instance.</returns>
-        public async System.Threading.Tasks.Task<Object> CallApiAsync(
-            String path, RestSharp.Method method, List<KeyValuePair<String, String>> queryParams, Object postBody,
-            Dictionary<String, String> headerParams, Dictionary<String, String> formParams,
-            Dictionary<String, FileParameter> fileParams, Dictionary<String, String> pathParams,
-            String contentType)
+        public async System.Threading.Tasks.Task<object> CallApiAsync(
+            string path, RestSharp.Method method, List<KeyValuePair<string, string>> queryParams, object postBody,
+            Dictionary<string, string> headerParams, Dictionary<string, string> formParams,
+            Dictionary<string, FileParameter> fileParams, Dictionary<string, string> pathParams,
+            string contentType)
         {
             var request = PrepareRequest(
                 path, method, queryParams, postBody, headerParams, formParams, fileParams,
@@ -205,7 +218,7 @@ namespace IO.ClickSend.Client
             InterceptRequest(request);
             var response = await RestClient.ExecuteAsync(request);
             InterceptResponse(request, response);
-            return (Object)response;
+            return (object)response;
         }
 
         /// <summary>
@@ -287,7 +300,7 @@ namespace IO.ClickSend.Client
             {
                 if (headers != null)
                 {
-                    var filePath = String.IsNullOrEmpty(Configuration.TempFolderPath)
+                    var filePath = string.IsNullOrEmpty(Configuration.TempFolderPath)
                         ? Path.GetTempPath()
                         : Configuration.TempFolderPath;
                     var regex = new Regex(@"Content-Disposition=.*filename=['""]?([^'""\s]+)['""]?$");
@@ -311,7 +324,7 @@ namespace IO.ClickSend.Client
                 return DateTime.Parse(response.Content,  null, System.Globalization.DateTimeStyles.RoundtripKind);
             }
 
-            if (type == typeof(String) || type.Name.StartsWith("System.Nullable")) // return primitive type
+            if (type == typeof(string) || type.Name.StartsWith("System.Nullable")) // return primitive type
             {
                 return ConvertType(response.Content, type);
             }
@@ -332,7 +345,7 @@ namespace IO.ClickSend.Client
         /// </summary>
         /// <param name="obj">Object.</param>
         /// <returns>JSON string.</returns>
-        public String Serialize(object obj)
+        public string Serialize(object obj)
         {
             try
             {
@@ -354,7 +367,7 @@ namespace IO.ClickSend.Client
         /// </summary>
         /// <param name="mime">MIME</param>
         /// <returns>Returns True if MIME type is json.</returns>
-        public bool IsJsonMime(String mime)
+        public bool IsJsonMime(string mime)
         {
             var jsonRegex = new Regex("(?i)^(application/json|[^;/ \t]+/[^;/ \t]+[+]json)[ \t]*(;.*)?$");
             return mime != null && (jsonRegex.IsMatch(mime) || mime.Equals("application/json-patch+json"));
@@ -367,7 +380,7 @@ namespace IO.ClickSend.Client
         /// </summary>
         /// <param name="contentTypes">The Content-Type array to select from.</param>
         /// <returns>The Content-Type header to use.</returns>
-        public String SelectHeaderContentType(String[] contentTypes)
+        public string SelectHeaderContentType(string[] contentTypes)
         {
             if (contentTypes.Length == 0)
                 return "application/json";
@@ -388,7 +401,7 @@ namespace IO.ClickSend.Client
         /// </summary>
         /// <param name="accepts">The accepts array to select from.</param>
         /// <returns>The Accept header to use.</returns>
-        public String SelectHeaderAccept(String[] accepts)
+        public string SelectHeaderAccept(string[] accepts)
         {
             if (accepts.Length == 0)
                 return null;
@@ -396,7 +409,7 @@ namespace IO.ClickSend.Client
             if (accepts.Contains("application/json", StringComparer.OrdinalIgnoreCase))
                 return "application/json";
 
-            return String.Join(",", accepts);
+            return string.Join(",", accepts);
         }
 
         /// <summary>

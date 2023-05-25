@@ -10,6 +10,7 @@
 
 
 using System.Collections.Generic;
+using System.Net;
 
 namespace IO.ClickSend.Client
 {
@@ -83,6 +84,8 @@ namespace IO.ClickSend.Client
         /// </summary>
         /// <value>Password.</value>
         string Password { get; }
+
+        IWebProxy Proxy { get; set; }
 
         /// <summary>
         /// Gets the API key with prefix.
